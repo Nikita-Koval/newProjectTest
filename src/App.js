@@ -1,12 +1,11 @@
-import logo from './logo.svg';
-import './App.scss';
+import React from "react";
+import "./App.scss";
+import Routes from "./routes";
 
-function App() {
-  return (
-    <div className="App">
-
-    </div>
-  );
-}
+const App = () => (
+  <div className="App">
+    <Routes />
+  </div>
+);
 
 export default App;
