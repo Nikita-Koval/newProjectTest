@@ -1,57 +1,115 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 import "./loginPage.scss";
+import { Form, Input, Col, Row } from "antd";
+import { Button } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import handleLogin from "../../servises/login.servises";
+import GoogleLogin from "react-google-login";
 
 const LoginPage = () => {
-  const [login, setTextLog] = useState("");
-  const [password, setTextPassword] = useState("");
-  const useStyles = makeStyles(() => ({
-    textField: {
-      margin: "0 1em",
-    },
-  }));
-  const classes = useStyles();
+  const history = useHistory();
+  const onFinish = async (values) => {
+    const result = await handleLogin(values);
+    if (result.data.token) {
+      history.push("/mainpage");
+    }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  const responseGoogle = async (response) => {
+    if (response) {
+      const values = { email: response.Ts.Et, type: "google" };
+      const result = await handleLogin(values);
+      if (result.data.token) {
+        history.push("/mainpage");
+      }
+    }
+  };
 
   return (
     <div className="wrapper">
-      <p className="logoText">Войти в систему</p>
-      <div className="loginContainer">
-        <TextField
-          required
-          className={classes.textField}
-          id="login"
-          name="login"
-          onChange={(e) => setTextLog(e.target.value)}
-          type="text"
-          value={login}
-          placeholder="Enter your login..."
-          variant="outlined"
-        />
-      </div>
-      <div className="passwordContainer">
-        <TextField
-          required
-          className={classes.textField}
-          id="password"
-          name="password"
-          onChange={(e) => setTextPassword(e.target.value)}
-          type="text"
-          value={password}
-          placeholder="Enter your password..."
-          variant="outlined"
-        />
-      </div>
-      <div className="formBlockBtn">
-        <Button variant="contained" color="primary" type="submit">
-          Войти
-        </Button>
-        <Link to="/registration" className="linkBtn">
-          Зарегистрироваться
-        </Link>
-      </div>
+      <Form
+        initialValues={{
+          remember: true,
+        }}
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        <p className="logoTextLogin">Log in the system</p>
+        <div className="loginContainer">
+          <Row>
+            <Col span={18} offset={3}>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
+                <Input
+                  required
+                  size="large"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email..."
+                  prefix={<UserOutlined />}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="passwordContainer">
+          <Col span={18} offset={3}>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
+            >
+              <Input.Password
+                id="password"
+                name="password"
+                placeholder="Enter your passport..."
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+          </Col>
+        </div>
+        <div className="formBlockBtn">
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Login
+            </Button>
+          </Form.Item>
+          <GoogleLogin
+            // eslint-disable-next-line no-undef
+            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+            buttonText="Google"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            className="googleAuth"
+            cookiePolicy={"single_host_origin"}
+          />
+          <Link to="/registration" className="linkBtn">
+            Registration
+          </Link>
+        </div>
+      </Form>
     </div>
   );
 };
