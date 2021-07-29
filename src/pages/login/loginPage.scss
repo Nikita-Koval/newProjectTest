@@ -6,22 +6,42 @@
   border: 1px solid rgb(65, 28, 28);
   border-radius: 15px;
 
-  .logoText {
-    color: red;
+  .logoTextLogin {
+    color: rgb(60, 60, 206);
+    margin: 1.5em;
   }
-  
-  .loginContainer, 
+
+  .loginContainer,
   .passwordContainer {
     display: flex;
     flex-direction: column;
     margin-bottom: 1em;
   }
-  
+
   .formBlockBtn {
     margin: 1em 0;
   }
-  
+
+  .wrapper,
+  .formBlockBtn {
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+    margin: 1em 0;
+  }
+
   .linkBtn {
     margin-left: 1em;
+    font-size: 24px;
+  }
+
+  .googleAuth {
+    max-width: 110px;
+    height: 45px;
+  }
+
+  .ant-btn-primary {
+    height: 45px;
+    margin-right: 2em;
   }
 }

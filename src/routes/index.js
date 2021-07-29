@@ -4,6 +4,7 @@ import PrivateLayout from "../layouts/PrivateLayout";
 import PublicLayout from "../layouts/PublicLayout";
 import PublicRoute from "./PublicRoute";
 import PrivateRoute from "./PrivateRoute";
+import { Spin, Space } from "antd";
 
 const LoginPage = lazy(() => import("../pages/login/LoginPage"));
 const RegistrationPage = lazy(() =>
@@ -13,7 +14,13 @@ const MainPage = lazy(() => import("../pages/mainPage/MainPage"));
 
 const App = () => (
   <BrowserRouter>
-    <Suspense fallback={<div>Загрузка...</div>}>
+    <Suspense
+      fallback={
+        <Space size="middle">
+          <Spin size="large" />
+        </Space>
+      }
+    >
       <Switch>
         <PublicRoute
           path="/login"
@@ -27,7 +34,7 @@ const App = () => (
         />
         <PrivateRoute
           exact
-          path="/mainPage"
+          path="/mainpage"
           layout={PrivateLayout}
           component={MainPage}
         />
