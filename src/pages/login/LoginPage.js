@@ -1,39 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
-import "./loginPage.scss";
-import { Form, Input, Col, Row } from "antd";
-import { Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import handleLogin from "../../servises/login.servises";
+import React, { useEffect } from "react";
+import { useHistory, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
+import { Login } from "../../store/actions/login.actions";
+import "./loginPage.scss";
+import { Form, Input, Col, Row, Button, Alert, Spin } from "antd";
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const LoginPage = () => {
-  const history = useHistory();
-  const onFinish = async (values) => {
-    const result = await handleLogin(values);
-    if (result.data.token) {
+  const dispatch = useDispatch();
+  const errorText = useSelector((state) => state.user.error);
+  const loading = useSelector((state) => state.user.isLoading);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
       history.push("/mainpage");
     }
+  }, [isAuthenticated]);
+
+  const history = useHistory();
+  const onFinish = (values) => {
+    dispatch(Login(values));
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const responseGoogle = async (response) => {
+  const responseGoogle = (response) => {
     if (response) {
       const values = { email: response.Ts.Et, type: "google" };
-      const result = await handleLogin(values);
-      if (result.data.token) {
-        history.push("/mainpage");
-      }
+      dispatch(Login(values));
     }
   };
 
   return (
     <div className="wrapper">
+      {loading && <Spin />}
       <Form
         initialValues={{
           remember: true,
@@ -110,6 +118,9 @@ const LoginPage = () => {
           </Link>
         </div>
       </Form>
+      {errorText && (
+        <Alert message={errorText} type="warning" showIcon closable />
+      )}
     </div>
   );
 };
