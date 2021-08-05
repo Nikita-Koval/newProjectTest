@@ -3,19 +3,20 @@ import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
 import { Login } from "../../store/actions/login.actions";
-import "./loginPage.scss";
 import { Form, Input, Col, Row, Button, Alert, Spin } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   UserOutlined,
 } from "@ant-design/icons";
+import "./loginPage.scss";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const errorText = useSelector((state) => state.user.error);
   const loading = useSelector((state) => state.user.isLoading);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const history = useHistory();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -23,7 +24,6 @@ const LoginPage = () => {
     }
   }, [isAuthenticated]);
 
-  const history = useHistory();
   const onFinish = (values) => {
     dispatch(Login(values));
   };
