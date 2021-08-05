@@ -7,7 +7,7 @@ const MainPage = () => {
     <div>
       <h1>That&apos;s main page</h1>
       <p>
-        Hello, <b>{userName}</b> !
+        Hello, <b>{userName || "Username"}</b> !
       </p>
     </div>
   );

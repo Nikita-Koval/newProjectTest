@@ -1,65 +1,233 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Input, Col, Row } from "antd";
-import { Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { useHistory, Link } from "react-router-dom";
+import { Input, Col, Row, Select, Form, Button, Alert } from "antd";
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  UserOutlined,
+} from "@ant-design/icons";
 import "./registrationPage.scss";
 
 const RegistrationPage = () => {
-  const [login, setLog] = useState("");
+  const [isMatch, setIsMatch] = useState(false);
+  const history = useHistory();
+  const token = localStorage.getItem("token");
+  const genders = ["Male", "Female", "Other"];
+  const country = ["Russia"];
+  const cities = ["Taganrog", "Rostov", "Moscow", "Belgorod"];
+
+  useEffect(() => {
+    if (token) {
+      history.push("/mainpage");
+    }
+  }, [token]);
+
+  const { Option } = Select;
+
+  const onFinish = (values) => {
+    if (values.password !== values.passwordRepeat) {
+      setIsMatch(true);
+    } else {
+      localStorage.setItem("token", "asdadFASd123a12RF1Qfwsf");
+      history.push("/mainpage");
+    }
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
-    <div className="wrapper">
+    <div className="wrapperRegistration">
       <p className="logoText">Register in the system</p>
-      <div className="loginContainer">
-        Login:
-        <Row>
+      <Form
+        initialValues={{
+          remember: true,
+          ["gender"]: "Male",
+        }}
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        <div className="loginContainer">
+          Email:
+          <Row>
+            <Col span={18} offset={3}>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your email!",
+                  },
+                ]}
+              >
+                <Input
+                  required
+                  size="large"
+                  id="email"
+                  name="email"
+                  type="email"
+                  prefix={<UserOutlined />}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="aboutUser">
+          <Row justify="space-around">
+            <Col span={6}>
+              Your name:
+              <Form.Item
+                name="userName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your name!",
+                  },
+                ]}
+              >
+                <Input id="userName" name="userName" required />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              Your age:
+              <Form.Item
+                name="userAge"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your age!",
+                  },
+                ]}
+              >
+                <Input id="userAge" name="userAge" required />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              Your gender:
+              <Form.Item
+                name="gender"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your gender!",
+                  },
+                ]}
+              >
+                <Select id="gender" name="gender" required>
+                  {genders.map((gender, index) => (
+                    <Option key={`gender-${index}`} value={gender}>
+                      {gender}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify="space-around">
+            <Col span={11}>
+              Your country:
+              <Form.Item
+                name="country"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your country!",
+                  },
+                ]}
+              >
+                <Select id="country" name="country" required>
+                  {country.map((country, index) => (
+                    <Option key={`country-${index}`} value={country}>
+                      {country}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={11}>
+              Your city:
+              <Form.Item
+                name="city"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your city!",
+                  },
+                ]}
+              >
+                <Select id="city" name="city" required>
+                  {cities.map((city, index) => (
+                    <Option key={`city-${index}`} value={city}>
+                      {city}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="passwordContainer">
+          Password:
           <Col span={18} offset={3}>
-            <Input
-              required
-              size="large"
-              id="login"
-              name="login"
-              type="text"
-              value={login}
-              onChange={(e) => setLog(e.target.value)}
-              placeholder="Enter your login..."
-              prefix={<UserOutlined />}
-            />
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
+            >
+              <Input.Password
+                id="password"
+                name="password"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
           </Col>
-        </Row>
-      </div>
-      <div className="passwordContainer">
-        Password:
-        <Col span={18} offset={3}>
-          <Input.Password
-            placeholder="Enter your passport..."
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
-        </Col>
-      </div>
-      <div className="repeatPasswordContainer">
-        Repeat password:
-        <Col span={18} offset={3}>
-          <Input.Password
-            id="repPassword"
-            name="repPassword"
-            placeholder="Repeat your passport..."
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
-        </Col>
-      </div>
-      <div className="formBlockBtn">
-        <Button type="primary">Sign up</Button>
-        <Link to="/login" className="linkBtn">
-          Sign in
-        </Link>
-      </div>
+        </div>
+        <div className="repeatPasswordContainer">
+          Repeat password:
+          <Col span={18} offset={3}>
+            <Form.Item
+              name="passwordRepeat"
+              rules={[
+                {
+                  required: true,
+                  message: "Please repeate your password!",
+                },
+              ]}
+            >
+              <Input.Password
+                id="passwordRepeat"
+                name="passwordRepeat"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+          </Col>
+        </div>
+        <div className="formBlockBtn">
+          <Button type="primary" htmlType="submit">
+            Sign up
+          </Button>
+          <Link to="/login" className="linkBtnRegistration">
+            Sign in
+          </Link>
+        </div>
+      </Form>
+      {isMatch && (
+        <Alert
+          message={"Password not match ! Please try again..."}
+          type="warning"
+          showIcon
+          closable
+        />
+      )}
     </div>
   );
 };
