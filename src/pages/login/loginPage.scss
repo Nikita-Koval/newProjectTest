@@ -1,5 +1,8 @@
 .wrapper {
+  display: flex;
+  flex-direction: column;
   width: 35%;
+  min-width: 300px;
   margin: 0 auto;
   border: 1px solid rgb(65, 28, 28);
   border-radius: 15px;
@@ -28,6 +31,7 @@
     display: flex;
     justify-content: center;
     margin: 1em 0;
+    flex-wrap: wrap;
   }
 
   .linkBtn {
@@ -44,14 +48,13 @@
     height: 45px;
     margin-right: 2em;
   }
-  
-  .ant-spin-spinning {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 5;
-  top: 38%;
-  bottom: 0;
-}
-}
 
+  .ant-spin-spinning {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    top: 38%;
+    bottom: 0;
+  }
+}
