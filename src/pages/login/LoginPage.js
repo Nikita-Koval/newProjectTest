@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
-import { Login } from "../../store/actions/login.actions";
+import { login } from "../../store/actions/user.actions";
 import { Form, Input, Col, Row, Button, Alert, Spin } from "antd";
 import {
   EyeInvisibleOutlined,
@@ -25,7 +25,7 @@ const LoginPage = () => {
   }, [isAuthenticated]);
 
   const onFinish = (values) => {
-    dispatch(Login(values));
+    dispatch(login(values));
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -35,7 +35,7 @@ const LoginPage = () => {
   const responseGoogle = (response) => {
     if (response) {
       const values = { email: response.Ts.Et, type: "google" };
-      dispatch(Login(values));
+      dispatch(login(values));
     }
   };
 

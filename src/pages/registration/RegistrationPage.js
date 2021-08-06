@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { registration } from "../../store/actions/user.actions";
 import { Input, Col, Row, Select, Form, Button, Alert } from "antd";
 import {
   EyeInvisibleOutlined,
@@ -8,28 +10,29 @@ import {
 } from "@ant-design/icons";
 import "./registrationPage.scss";
 
+const genders = ["Male", "Female", "Other"];
+const country = ["Russia"];
+const cities = ["Taganrog", "Rostov", "Moscow", "Belgorod"];
+
 const RegistrationPage = () => {
-  const [isMatch, setIsMatch] = useState(false);
+  const [isMatch, setIsMatch] = useState(true);
   const history = useHistory();
-  const token = localStorage.getItem("token");
-  const genders = ["Male", "Female", "Other"];
-  const country = ["Russia"];
-  const cities = ["Taganrog", "Rostov", "Moscow", "Belgorod"];
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       history.push("/mainpage");
     }
-  }, [token]);
+  }, [isAuthenticated]);
 
   const { Option } = Select;
 
   const onFinish = (values) => {
     if (values.password !== values.passwordRepeat) {
-      setIsMatch(true);
+      setIsMatch(false);
     } else {
-      localStorage.setItem("token", "asdadFASd123a12RF1Qfwsf");
-      history.push("/mainpage");
+      dispatch(registration(values));
     }
   };
   const onFinishFailed = (errorInfo) => {
@@ -78,7 +81,7 @@ const RegistrationPage = () => {
             <Col span={6}>
               Your name:
               <Form.Item
-                name="userName"
+                name="name"
                 rules={[
                   {
                     required: true,
@@ -86,13 +89,13 @@ const RegistrationPage = () => {
                   },
                 ]}
               >
-                <Input id="userName" name="userName" required />
+                <Input id="name" name="name" required />
               </Form.Item>
             </Col>
             <Col span={6}>
               Your age:
               <Form.Item
-                name="userAge"
+                name="age"
                 rules={[
                   {
                     required: true,
@@ -100,7 +103,7 @@ const RegistrationPage = () => {
                   },
                 ]}
               >
-                <Input id="userAge" name="userAge" required />
+                <Input id="age" name="age" required />
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -220,7 +223,7 @@ const RegistrationPage = () => {
           </Link>
         </div>
       </Form>
-      {isMatch && (
+      {!isMatch && (
         <Alert
           message={"Password not match ! Please try again..."}
           type="warning"
