@@ -1,4 +1,4 @@
-import loginService from "../../servises/user.servises";
+import loginService from "../../../servises/user.servises";
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";

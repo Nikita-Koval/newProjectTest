@@ -1,4 +1,4 @@
-import * as Actions from "../actions";
+import * as Actions from "../../actions";
 
 const initialState = {
   isAuthenticated: false,
@@ -7,6 +7,7 @@ const initialState = {
   name: "",
   email: "",
 };
+
 const login = (state = initialState, action) => {
   switch (action.type) {
     case Actions.LOGIN_REQUEST:

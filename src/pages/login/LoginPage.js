@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
-import { login } from "../../store/actions/user.actions";
+import { login } from "../../store/actions/user/user.actions";
 import { Form, Input, Col, Row, Button, Alert, Spin } from "antd";
 import {
   EyeInvisibleOutlined,
