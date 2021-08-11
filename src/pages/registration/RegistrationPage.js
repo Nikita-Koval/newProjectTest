@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { registration } from "../../store/actions/user.actions";
+import { registration } from "../../store/actions/user/user.actions";
 import { Input, Col, Row, Select, Form, Button, Alert } from "antd";
 import {
   EyeInvisibleOutlined,
