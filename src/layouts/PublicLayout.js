@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 const PublicLayout = ({ children }) => (
   <div>
-    <h1> Public </h1>
     <div>{children}</div>
   </div>
 );

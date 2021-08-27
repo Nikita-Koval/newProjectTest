@@ -10,9 +10,19 @@ import {
 } from "@ant-design/icons";
 import "./registrationPage.scss";
 
-const genders = ["Male", "Female", "Other"];
+const genders = [
+  { id: 1, name: "Male" },
+  { id: 2, name: "Female" },
+  { id: 3, name: "Other" },
+];
 const country = ["Russia"];
-const cities = ["Taganrog", "Rostov", "Moscow", "Belgorod"];
+const cities = [
+  { id: 1, name: "Taganrog" },
+  { id: 2, name: "Rostov" },
+  { id: 3, name: "Moscow" },
+  { id: 4, name: "Belgorod" },
+];
+// const cities = ["Taganrog", "Rostov", "Belgorod"];
 
 const RegistrationPage = () => {
   const [isMatch, setIsMatch] = useState(true);
@@ -118,9 +128,9 @@ const RegistrationPage = () => {
                 ]}
               >
                 <Select id="gender" name="gender" required>
-                  {genders.map((gender, index) => (
-                    <Option key={`gender-${index}`} value={gender}>
-                      {gender}
+                  {genders.map((gender) => (
+                    <Option key={gender.id} value={gender.name}>
+                      {gender.name}
                     </Option>
                   ))}
                 </Select>
@@ -160,9 +170,9 @@ const RegistrationPage = () => {
                 ]}
               >
                 <Select id="city" name="city" required>
-                  {cities.map((city, index) => (
-                    <Option key={`city-${index}`} value={city}>
-                      {city}
+                  {cities.map((city) => (
+                    <Option key={city.id} value={city.name}>
+                      {city.name}
                     </Option>
                   ))}
                 </Select>

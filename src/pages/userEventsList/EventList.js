@@ -1,49 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import GoogleMapReact from "google-map-react";
-import MyMarker from "./MyMarker";
-import { createMark, getMarks } from "../store/actions/event/event.actions";
-import { Alert, Modal, Form, Input, Select, Col, Button, Row } from "antd";
-import "./googleMap.scss";
+import * as moment from "moment";
+import {
+  getUserMarks,
+  deleteMark,
+  changeMark,
+} from "../../store/actions/event/event.actions";
+import {
+  List,
+  Button,
+  Spin,
+  Modal,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  DatePicker,
+} from "antd";
+import "./eventList.scss";
 
-const distanceToMouse = (pt, mp) => {
-  if (pt && mp) {
-    // return distance between the marker and mouse pointer
-    return Math.sqrt(
-      (pt.x - mp.x) * (pt.x - mp.x) + (pt.y - mp.y) * (pt.y - mp.y)
-    );
-  }
-};
+const EventList = () => {
+  const dispatch = useDispatch();
 
-const GoogleMap = () => {
-  const events = useSelector((state) => state.events.data);
   const userId = useSelector((state) => state.user.userId);
-  const errorText = useSelector((state) => state.events.error);
+  const userEvents = useSelector((state) => state.events.data);
+  const loading = useSelector((state) => state.events.isLoading);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [coordinates, setCoordinates] = useState({ lat: 0.0, lng: 0.0 });
+  const [itemId, setitemId] = useState("");
 
   const categories = [
     { id: 1, name: "Sport" },
     { id: 2, name: "Fun" },
     { id: 3, name: "Other" },
   ];
+
   const { Option } = Select;
+  const { RangePicker } = DatePicker;
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUserMarks(userId));
+  }, []);
 
-  const handleClick = ({ lat, lng }) => {
+  const editEvent = (itemId) => {
     setIsModalVisible(true);
-    setCoordinates({ lat, lng });
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+    setitemId(itemId);
   };
 
   const onFinish = (values) => {
-    const timestamp = new Date().getTime();
-    dispatch(createMark({ ...values, userId, timestamp, coordinates }));
-    dispatch(getMarks());
+    dispatch(changeMark(values, itemId, userId));
     setIsModalVisible(false);
   };
 
@@ -51,41 +58,56 @@ const GoogleMap = () => {
     console.log("Failed:", errorInfo);
   };
 
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const deleteEvent = (itemId) => {
+    dispatch(deleteMark(itemId, userId));
+  };
+
   return (
-    <div className="App">
-      {errorText ? (
-        <Alert message={errorText} type="warning" showIcon closable />
+    <div>
+      <h1>That&apos;s events page</h1>
+      <Link to="/mainpage" className="linkBtn">
+        Main Page
+      </Link>
+      {loading ? (
+        <Spin />
       ) : (
-        <GoogleMapReact
-          bootstrapURLKeys={{
-            // remove the key if you want to fork
-            // key: "AIzaSyDiKc4HxX5G7EfneIZBN_Hlk2_luoT_yvo",
-            language: "en",
-            region: "US",
-          }}
-          onClick={handleClick}
-          defaultCenter={{ lat: 51.506, lng: -0.169 }}
-          defaultZoom={15}
-          distanceToMouse={distanceToMouse}
-        >
-          {events.map((event) => {
-            return (
-              <MyMarker
-                key={event._id}
-                lat={event.lat}
-                lng={event.lng}
-                text={event.description}
-                tooltip={event.title}
-                userId={event.userId}
-                timestamp={event.timestamp}
-                type={event.type}
-              />
-            );
-          })}
-        </GoogleMapReact>
+        <List
+          itemLayout="vertical"
+          dataSource={userEvents}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta title={item.title} description={item.type} />
+              <p>{item.description}</p>
+              <p>{moment(item.timestamp).format("DD/MM/YYYY HH:mm:ss")}</p>
+              <div className="buttonWrapper">
+                <Button
+                  style={{ backgroundColor: "#5c6bc0", borderColor: "black" }}
+                  type="primary"
+                  onClick={() => editEvent(item._id)}
+                  shape="circle"
+                >
+                  Edit
+                </Button>
+                <Button
+                  style={{ backgroundColor: "#e57373", borderColor: "black" }}
+                  type="primary"
+                  onClick={() => deleteEvent(item._id)}
+                  shape="circle"
+                >
+                  Del
+                </Button>
+              </div>
+            </List.Item>
+          )}
+        />
       )}
+
       <Modal
-        title="Create event..."
+        title="Edit event..."
         onCancel={handleCancel}
         visible={isModalVisible}
         footer={null}
@@ -104,12 +126,11 @@ const GoogleMap = () => {
               name="type"
               rules={[
                 {
-                  required: true,
-                  message: "Please input your email!",
+                  message: "Please input type of the event !",
                 },
               ]}
             >
-              <Select id="type" name="type" required>
+              <Select id="type" name="type">
                 {categories.map((type) => (
                   <Option key={type.id} value={type.name}>
                     {type.name}
@@ -123,7 +144,6 @@ const GoogleMap = () => {
               name="title"
               rules={[
                 {
-                  required: true,
                   message: "Please input title of the event !",
                 },
               ]}
@@ -132,7 +152,6 @@ const GoogleMap = () => {
                 id="title"
                 name="title"
                 placeholder="Enter title of the event..."
-                required
               />
             </Form.Item>
           </Col>
@@ -141,7 +160,6 @@ const GoogleMap = () => {
               name="description"
               rules={[
                 {
-                  required: true,
                   message: "Please input description of the event !",
                 },
               ]}
@@ -150,9 +168,11 @@ const GoogleMap = () => {
                 id="description"
                 name="description"
                 placeholder="Enter description of the event..."
-                required
               />
             </Form.Item>
+          </Col>
+          <Col span={18} offset={3}>
+            <RangePicker showTime defaultPickerValue={[null, null]} />
           </Col>
           <Col span={18} offset={3} push={5}>
             <div className="buttonsWrapper">
@@ -160,11 +180,9 @@ const GoogleMap = () => {
                 <Button type="ghost" htmlType="submit" onClick={handleCancel}>
                   Cancel
                 </Button>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Send
-                  </Button>
-                </Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Accept
+                </Button>
               </Row>
             </div>
           </Col>
@@ -174,4 +192,4 @@ const GoogleMap = () => {
   );
 };
 
-export default GoogleMap;
+export default EventList;

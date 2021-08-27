@@ -11,6 +11,8 @@ const RegistrationPage = lazy(() =>
   import("../pages/registration/RegistrationPage")
 );
 const MainPage = lazy(() => import("../pages/mainPage/MainPage"));
+const EventList = lazy(() => import("../pages/userEventsList/EventList"));
+const UserPage = lazy(() => import("../pages/usersPage/UserPage"));
 
 const App = () => (
   <BrowserRouter>
@@ -37,6 +39,17 @@ const App = () => (
           path="/mainpage"
           layout={PrivateLayout}
           component={MainPage}
+        />
+        <PrivateRoute
+          exact
+          path="/eventlist"
+          layout={PrivateLayout}
+          component={EventList}
+        />
+        <PrivateRoute
+          path="/userevent/:userid"
+          layout={PrivateLayout}
+          component={UserPage}
         />
         <Redirect from="*" to="/login" />
       </Switch>
