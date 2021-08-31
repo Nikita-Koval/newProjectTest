@@ -6,11 +6,10 @@ import { Badge, Card, Spin } from "antd";
 import "./userPage.scss";
 
 const UserPage = () => {
-  const userProfile = useSelector((state) => state.userProfile.data[0]);
-  const loading = useSelector((state) => state.userProfile.isLoading);
+  const userProfile = useSelector((state) => state.otherUserProfile.data[0]);
+  const loading = useSelector((state) => state.otherUserProfile.isLoading);
   const { userid } = useParams();
 
-  console.log(location.href);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,7 +19,6 @@ const UserPage = () => {
   return (
     <div className="userWrapper">
       <h1>UserEvent</h1>
-      <p>{userid}</p>
       <Link to="/mainpage" className="linkBtn">
         Main Page
       </Link>

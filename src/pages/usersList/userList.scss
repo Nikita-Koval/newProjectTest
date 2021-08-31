@@ -1,0 +1,9 @@
+.sortWrapper {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sortWrapper .ant-select .ant-select-single .ant-select-show-arrow {
+  max-width: 100px;
+}

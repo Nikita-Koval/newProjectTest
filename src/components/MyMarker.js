@@ -46,7 +46,9 @@ const MyMarker = ({ text, tooltip, hover, userId, timestamp, type }) => {
         <b>Date of creation:</b>
         <p>{moment(timestamp).format("DD/MM/YYYY HH:mm:ss")}</p>
         <b>Type:</b> <p>{type}</p>
-        <b onClick={() => toProfileUser(userId)}>User profile</b>
+        <b style={{ color: "blue" }} onClick={() => toProfileUser(userId)}>
+          User profile
+        </b>
       </Drawer>
     </div>
   );

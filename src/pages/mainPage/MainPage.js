@@ -43,7 +43,7 @@ const MainPage = () => {
   };
 
   const modelChange = (values) => {
-    dispatch(getMarks(filterValue, +values[0]._d, +values[1]._d));
+    dispatch(getMarks(filterValue, +values[0]._d === 0, +values[1]._d));
     setFilterDate({ startDate: +values[0]._d, endDate: +values[1]._d });
   };
 
@@ -109,10 +109,10 @@ const MainPage = () => {
               </Menu.Item>
               <Menu.Item
                 key="2"
-                onClick={() => history.push("/somewhere")}
+                onClick={() => history.push("/userlist")}
                 icon={<MehOutlined />}
               >
-                Something else
+                User List
               </Menu.Item>
             </Menu>
           </div>
