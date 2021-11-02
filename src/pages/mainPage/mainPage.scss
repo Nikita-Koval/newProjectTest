@@ -1,6 +1,7 @@
 .mainWrapper {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 1em;
 }
 
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
@@ -13,4 +14,32 @@
 
 .title {
   margin-right: 1em;
+}
+
+.mapContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.menuWrapperClose, 
+.menuWrapperOpen {
+  display: flex;
+  flex-direction: column;
+  min-width: 75px;
+  height: 100%;
+  background-color: rgb(0, 21, 37);
+  position: absolute;
+  left: 0px;
+  top: 12%;;
+  z-index: 5;
+  transition: 0.6s;
+}
+
+.menuWrapperOpen {
+  min-width: 145px;
+}
+
+.googleMap {
+  width: 100%;
 }
